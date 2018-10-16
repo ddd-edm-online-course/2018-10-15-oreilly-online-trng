@@ -1,6 +1,7 @@
 package com.mattstine.dddworkshop.pizzashop.kitchen;
 
 import com.mattstine.dddworkshop.pizzashop.infrastructure.events.ports.EventLog;
+import com.mattstine.dddworkshop.pizzashop.infrastructure.events.ports.Topic;
 import com.mattstine.dddworkshop.pizzashop.infrastructure.repository.ports.Aggregate;
 import com.mattstine.dddworkshop.pizzashop.infrastructure.repository.ports.AggregateState;
 import lombok.Builder;
@@ -53,6 +54,7 @@ public final class Pizza implements Aggregate {
         }
 
         this.state = State.PREPPING;
+        this.$eventLog.publish(new Topic("pizzas"), new PizzaPrepStartedEvent(this.ref));
     }
 
     boolean isPrepping() {
@@ -65,6 +67,7 @@ public final class Pizza implements Aggregate {
         }
 
         this.state = State.PREPPED;
+        this.$eventLog.publish(new Topic("pizzas"), new PizzaPrepFinishedEvent(this.ref));
     }
 
     boolean hasFinishedPrep() {
@@ -77,6 +80,7 @@ public final class Pizza implements Aggregate {
         }
 
         this.state = State.BAKING;
+        this.$eventLog.publish(new Topic("pizzas"), new PizzaBakeStartedEvent(this.ref));
     }
 
     boolean isBaking() {
@@ -89,6 +93,7 @@ public final class Pizza implements Aggregate {
         }
 
         this.state = State.BAKED;
+        this.$eventLog.publish(new Topic("pizzas"), new PizzaBakeFinishedEvent(this.ref));
     }
 
     boolean hasFinishedBaking() {
